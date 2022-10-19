@@ -20,8 +20,8 @@ func NewAuditServer(service AuditService) *AuditServer {
 	}
 }
 
-func (h *AuditServer) Log(ctx context.Context, req *audit.LogRequest) (audit *audit.Empty, err error) {
-	err = h.service.Insert(ctx, req)
+func (h *AuditServer) Log(ctx context.Context, req *audit.LogRequest) (*audit.Empty, error) {
+	err := h.service.Insert(ctx, req)
 
-	return audit, err
+	return new(audit.Empty), err
 }

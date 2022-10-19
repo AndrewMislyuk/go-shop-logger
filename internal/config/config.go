@@ -1,35 +1,38 @@
 package config
 
 import (
-	"github.com/kelseyhightower/envconfig"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
-	DB     Mongo
+	DB     DB
 	Server Server
 }
 
-type Mongo struct {
-	URI      string
-	Username string
-	Password string
-	Database string
+type DB struct {
+	URI      string `envconfig:"DB_URI"`
+	Username string `envconfig:"DB_USERNAME"`
+	Password string `envconfig:"DB_PASSWORD"`
+	Database string `envconfig:"DB_DATABASE"`
 }
 
 type Server struct {
-	Port int
+	Port int `envconfig:"SERVER_PORT"`
 }
 
-func New() (*Config, error) {
-	cfg := new(Config)
-
-	if err := envconfig.Process("db", &cfg.DB); err != nil {
-		return nil, err
+func New() (cfg Config, err error) {
+	viper.SetConfigFile("./.env")
+	err = viper.ReadInConfig()
+	if err != nil {
+		return cfg, err
 	}
 
-	if err := envconfig.Process("server", &cfg.Server); err != nil {
-		return nil, err
-	}
+	cfg.Server.Port = viper.GetInt("SERVER_PORT")
+
+	cfg.DB.URI = viper.GetString("DB_URI")
+	cfg.DB.Username = viper.GetString("DB_USERNAME")
+	cfg.DB.Password = viper.GetString("DB_PASSWORD")
+	cfg.DB.Database = viper.GetString("DB_DATABASE")
 
 	return cfg, nil
 }

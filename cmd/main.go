@@ -22,19 +22,14 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	opts := options.Client()
+	opts := options.Client().ApplyURI(cfg.DB.URI)
 	opts.SetAuth(options.Credential{
 		Username: cfg.DB.Username,
 		Password: cfg.DB.Password,
 	})
-	opts.ApplyURI(cfg.DB.URI)
 
 	dbClient, err := mongo.Connect(ctx, opts)
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := dbClient.Ping(context.Background(), nil); err != nil {
 		log.Fatal(err)
 	}
 

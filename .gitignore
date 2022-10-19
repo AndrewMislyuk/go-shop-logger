@@ -1,4 +1,4 @@
 .env
 grpcApp
-vendor
+/vendor
 .DS_Store

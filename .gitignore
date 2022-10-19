@@ -1,3 +1,4 @@
 .env
 grpcApp
 vendor
+.DB_Store
